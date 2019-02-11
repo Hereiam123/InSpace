@@ -4,8 +4,8 @@
   "description": "A simple app using GraphQL and React to track SpaceX launches",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "server": "nodemon server.js"
+    "start": "nodemon server.js",
+    "server": "node server.js"
   },
   "repository": {
     "type": "git",
