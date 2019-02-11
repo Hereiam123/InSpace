@@ -2,9 +2,10 @@
   "name": "in-space",
   "version": "1.0.0",
   "description": "A simple app using GraphQL and React to track SpaceX launches",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "server": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,11 @@
   "bugs": {
     "url": "https://github.com/Hereiam123/InSpace/issues"
   },
-  "homepage": "https://github.com/Hereiam123/InSpace#readme"
+  "homepage": "https://github.com/Hereiam123/InSpace#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "express": "^4.16.4",
+    "express-graphql": "^0.7.1",
+    "graphql": "^14.1.1"
+  }
 }
