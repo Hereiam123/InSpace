@@ -12,7 +12,7 @@ class App extends Component {
   render() {
     return (
       <ApolloProvider client={client}>
-        <div className="App">
+        <div className="container">
           <h1>
             <img
               src={logo}
