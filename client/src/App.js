@@ -3,6 +3,7 @@ import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
 import logo from "./space_x.png";
 import "./App.css";
+import Launches from "./components/Launches";
 
 const client = new ApolloClient({
   uri: "http://localhost:5000/graphql"
@@ -20,6 +21,7 @@ class App extends Component {
               style={{ width: 300, display: "block", margin: "auto" }}
             />
           </h1>
+          <Launches />
         </div>
       </ApolloProvider>
     );
