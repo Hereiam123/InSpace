@@ -24,7 +24,7 @@ class App extends Component {
               />
             </h1>
             <Route exact path="/" component={Launches} />
-            <Route exact path="/launch/:flight_number" component={Launch} />
+            <Route exact path="/launch/:id" component={Launch} />
           </div>
         </Router>
       </ApolloProvider>

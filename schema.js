@@ -4,7 +4,7 @@ const {
   GraphQLString,
   GraphQLBoolean,
   GraphQLList,
-  GraphQLSchema
+  GraphQLSchema,
 } = require("graphql");
 const axios = require("axios");
 
@@ -12,22 +12,23 @@ const axios = require("axios");
 const LaunchType = new GraphQLObjectType({
   name: "Launch",
   fields: () => ({
+    id: {type: GraphQLString},
     flight_number: { type: GraphQLInt },
     name: { type: GraphQLString },
     date_utc: { type: GraphQLString },
     success: { type: GraphQLBoolean },
-    rocket: { type: RocketType }
-  })
+    rocket: { type: GraphQLString },
+    rocketData: { type: RocketType },
+  }),
 });
 
 //Rocket Type
 const RocketType = new GraphQLObjectType({
-  name: "Rocket",
+  name: "RocketData",
   fields: () => ({
-    rocket_id: { type: GraphQLString },
-    rocket_name: { type: GraphQLString },
-    rocket_type: { type: GraphQLString }
-  })
+    name: { type: GraphQLString },
+    type: { type: GraphQLString },
+  }),
 });
 
 //Root Query
@@ -37,52 +38,58 @@ const RootQuery = new GraphQLObjectType({
     launches: {
       type: new GraphQLList(LaunchType),
       resolve(parent, args) {
-        return axios.get("https://api.spacexdata.com/v4/launches").then(res => {
-		      return res.data;
-      	});
-    	}
-	},
+        return axios
+          .get("https://api.spacexdata.com/v4/launches")
+          .then((res) => {
+            return res.data;
+          });
+      },
+    },
     launch: {
       type: LaunchType,
       args: {
-        flight_number: {
-          type: GraphQLInt
-        }
+        id: {
+          type: GraphQLString,
+        },
       },
       resolve(parent, args) {
+        console.log(args);
         return axios
-          .get(`https://api.spacexdata.com/v4/launches/${args.flight_number}`)
-          .then(res => {
+          .get(`https://api.spacexdata.com/v4/launches/${args.id}`)
+          .then((res) => {
             return res.data;
           });
-      }
+      },
     },
     rockets: {
       type: new GraphQLList(RocketType),
       resolve(parent, args) {
-        return axios.get("https://api.spacexdata.com/v4/rockets").then(res => {
-          return res.data;
-        });
-      }
+        return axios
+          .get("https://api.spacexdata.com/v4/rockets")
+          .then((res) => {
+            return res.data;
+          });
+      },
     },
-    rocket: {
+    rocketData: {
       type: RocketType,
       args: {
-        rocket_id: {
-          type: GraphQLString
-        }
+        rocket: {
+          type: GraphQLString,
+        },
       },
       resolve(parent, args) {
         return axios
-          .get(`https://api.spacexdata.com/v4/rockets/${args.rocket_id}`)
-          .then(res => {
+          .get(`https://api.spacexdata.com/v4/rockets/${args.rocket}`)
+          .then((res) => {
+            console.log(res.data);
             return res.data;
           });
-      }
-    }
-  }
+      },
+    },
+  },
 });
 
 module.exports = new GraphQLSchema({
-  query: RootQuery
+  query: RootQuery,
 });

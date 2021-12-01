@@ -6,16 +6,15 @@ import Moment from "react-moment";
 import classNames from "classnames";
 
 const LAUNCH_QUERY = gql`
-  query LaunchQuery($flight_number: Int!) {
-    launch(flight_number: $flight_number) {
+  query LaunchQuery($id: String!) {
+    launch(id: $id) {
       flight_number
       name
       success
       date_utc
-      rocket {
-        rocket_id
-        rocket_name
-        rocket_type
+      rocketData {
+        name
+        type
       }
     }
   }
@@ -23,25 +22,25 @@ const LAUNCH_QUERY = gql`
 
 export class Launch extends Component {
   render() {
-    let { flight_number } = this.props.match.params;
-    flight_number = parseInt(flight_number);
+    let { id } = this.props.match.params;
+    //id = parseInt(id);
     return (
       <Fragment>
-        <Query query={LAUNCH_QUERY} variables={{ flight_number }}>
+        <Query query={LAUNCH_QUERY} variables={{ id }}>
           {({ loading, error, data }) => {
             if (loading) return <h4>Loading...</h4>;
             if (error) console.log(error);
             const {
-              mission_name,
+              name,
               flight_number,
-              launch_year,
-              launch_success,
-              rocket: { rocket_id, rocket_name, rocket_type }
+              date_utc,
+              success,
+              rocketData: { name: rocketName, type },
             } = data.launch;
             return (
               <div>
                 <h1 className="display-4 my-3">
-                  <span className="text-dark">Mission: {mission_name}</span>
+                  <span className="text-dark">Mission: {name}</span>
                 </h1>
                 <h4 className="mb-3">Launch Details</h4>
                 <ul className="list-group">
@@ -49,30 +48,28 @@ export class Launch extends Component {
                     Flight Number: {flight_number}
                   </li>
                   <Moment className="list-group-item" format="YYYY-MM-DD HH:mm">
-                    Launch Year: {launch_year}
+                    Launch Year: {date_utc}
                   </Moment>
                   <li className="list-group-item">
                     Launch Successful:{" "}
                     <span
                       className={classNames({
-                        "text-success": launch_success,
-                        "text-danger": !launch_success
+                        "text-success": success,
+                        "text-danger": !success,
                       })}
                     >
-                      {launch_success ? "Yes" : "No or Future Launch"}
+                      {success ? "Yes" : "No or Future Launch"}
                     </span>
                   </li>
                 </ul>
                 <h4 className="my-3">Rocket Details</h4>
                 <ul className="list-group">
-                  <li className="list-group-item">
+                  {/*<li className="list-group-item">
                     Flight Number: {flight_number}
-                  </li>
+                    </li>*/}
+                  <li className="list-group-item">Rocket Name: {rocketName}</li>
                   <li className="list-group-item">
-                    Rocket Name: {rocket_name}
-                  </li>
-                  <li className="list-group-item">
-                    Rocket Type: {rocket_type}
+                    Rocket Type: {type}
                   </li>
                 </ul>
                 <hr />
