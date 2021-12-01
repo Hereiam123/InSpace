@@ -8,9 +8,9 @@ const LAUNCHES_QUERY = gql`
   query LaunchesQuery {
     launches {
       flight_number
-      mission_name
-      launch_date_local
-      launch_success
+      name
+      date_utc
+      success
     }
   }
 `;
@@ -24,7 +24,7 @@ export class Launches extends Component {
         <Query query={LAUNCHES_QUERY}>
           {({ loading, error, data }) => {
             if (loading) return <h4>Loading...</h4>;
-            if (error) console.log(error);
+            if (error) console.log("Error ",error);
             return (
               <Fragment>
                 {data.launches.map(launch => {

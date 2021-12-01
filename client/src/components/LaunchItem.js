@@ -4,7 +4,7 @@ import Moment from "react-moment";
 import { Link } from "react-router-dom";
 
 export default function LaunchItem({
-  launch: { flight_number, mission_name, launch_date_local, launch_success }
+  launch: { flight_number, name, date_utc, success }
 }) {
   return (
     <div className="card card-body mb-3">
@@ -14,15 +14,15 @@ export default function LaunchItem({
             Mission:{" "}
             <span
               className={classNames({
-                "text-success": launch_success,
-                "text-danger": !launch_success
+                "text-success": success,
+                "text-danger": !success
               })}
             >
-              {mission_name}
+              {name}
             </span>
           </h4>
           <p>
-            Date: <Moment format="YYYY-MM-DD HH:mm">{launch_date_local}</Moment>
+            Date: <Moment format="YYYY-MM-DD HH:mm">{date_utc}</Moment>
           </p>
         </div>
         <div className="col-md-3">

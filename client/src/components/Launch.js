@@ -2,16 +2,16 @@ import React, { Component, Fragment } from "react";
 import gql from "graphql-tag";
 import { Query } from "react-apollo";
 import { Link } from "react-router-dom";
+import Moment from "react-moment";
 import classNames from "classnames";
 
 const LAUNCH_QUERY = gql`
   query LaunchQuery($flight_number: Int!) {
     launch(flight_number: $flight_number) {
       flight_number
-      mission_name
-      launch_year
-      launch_success
-      launch_date_local
+      name
+      success
+      date_utc
       rocket {
         rocket_id
         rocket_name
@@ -48,9 +48,9 @@ export class Launch extends Component {
                   <li className="list-group-item">
                     Flight Number: {flight_number}
                   </li>
-                  <li className="list-group-item">
+                  <Moment className="list-group-item" format="YYYY-MM-DD HH:mm">
                     Launch Year: {launch_year}
-                  </li>
+                  </Moment>
                   <li className="list-group-item">
                     Launch Successful:{" "}
                     <span
