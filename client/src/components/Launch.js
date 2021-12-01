@@ -12,10 +12,17 @@ const LAUNCH_QUERY = gql`
       name
       success
       date_utc
-      rocketData {
-        name
-        type
-      }
+      rocket
+    }
+  }
+`;
+
+const ROCKET_QUERY = gql`
+  query RocketQuery($rocket: String!) {
+    rocket(rocket: $rocket) {
+      name
+      type
+      description
     }
   }
 `;
@@ -23,60 +30,67 @@ const LAUNCH_QUERY = gql`
 export class Launch extends Component {
   render() {
     let { id } = this.props.match.params;
-    //id = parseInt(id);
     return (
       <Fragment>
         <Query query={LAUNCH_QUERY} variables={{ id }}>
           {({ loading, error, data }) => {
             if (loading) return <h4>Loading...</h4>;
             if (error) console.log(error);
-            const {
-              name,
-              flight_number,
-              date_utc,
-              success,
-              rocketData: { name: rocketName, type },
-            } = data.launch;
+            const { name, flight_number, date_utc, success, rocket } =
+              data.launch;
             return (
-              <div>
-                <h1 className="display-4 my-3">
-                  <span className="text-dark">Mission: {name}</span>
-                </h1>
-                <h4 className="mb-3">Launch Details</h4>
-                <ul className="list-group">
-                  <li className="list-group-item">
-                    Flight Number: {flight_number}
-                  </li>
-                  <Moment className="list-group-item" format="YYYY-MM-DD HH:mm">
-                    Launch Year: {date_utc}
-                  </Moment>
-                  <li className="list-group-item">
-                    Launch Successful:{" "}
-                    <span
-                      className={classNames({
-                        "text-success": success,
-                        "text-danger": !success,
-                      })}
-                    >
-                      {success ? "Yes" : "No or Future Launch"}
-                    </span>
-                  </li>
-                </ul>
-                <h4 className="my-3">Rocket Details</h4>
-                <ul className="list-group">
-                  {/*<li className="list-group-item">
-                    Flight Number: {flight_number}
-                    </li>*/}
-                  <li className="list-group-item">Rocket Name: {rocketName}</li>
-                  <li className="list-group-item">
-                    Rocket Type: {type}
-                  </li>
-                </ul>
-                <hr />
-                <Link to="/" className="btn btn-secondary">
-                  Go Back
-                </Link>
-              </div>
+              <Query query={ROCKET_QUERY} variables={{ rocket }}>
+                {({ loading, error, data }) => {
+                  if (loading) return <h4>Loading...</h4>;
+                  if (error) console.log(error);
+                  const { description, name: rocketName } = data.rocket;
+                  return (
+                    <div>
+                      <h1 className="display-4 my-3">
+                        <span className="text-dark">Mission: {name}</span>
+                      </h1>
+                      <h4 className="mb-3">Launch Details</h4>
+                      <ul className="list-group">
+                        <li className="list-group-item">
+                          Flight Number: {flight_number}
+                        </li>
+                        <li className="list-group-item">
+                        Launch Date: {" "}
+                        <Moment
+                          format="YYYY-MM-DD HH:mm"
+                        >
+                          {date_utc}
+                        </Moment>
+                        </li>
+                        <li className="list-group-item">
+                          Launch Successful:{" "}
+                          <span
+                            className={classNames({
+                              "text-success": success,
+                              "text-danger": !success,
+                            })}
+                          >
+                            {success ? "Yes" : "No or Future Launch"}
+                          </span>
+                        </li>
+                      </ul>
+                      <h4 className="my-3">Rocket Details</h4>
+                      <ul className="list-group">
+                        <li className="list-group-item">
+                          Rocket Name: {rocketName}
+                        </li>
+                        <li className="list-group-item">
+                          <p>Rocket Description: {description}</p>
+                        </li>
+                      </ul>
+                      <hr />
+                      <Link to="/" className="btn btn-secondary">
+                        Go Back
+                      </Link>
+                    </div>
+                  );
+                }}
+              </Query>
             );
           }}
         </Query>
