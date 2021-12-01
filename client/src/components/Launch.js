@@ -13,6 +13,7 @@ const LAUNCH_QUERY = gql`
       success
       date_utc
       rocket
+      details
     }
   }
 `;
@@ -23,6 +24,7 @@ const ROCKET_QUERY = gql`
       name
       type
       description
+      cost_per_launch
     }
   }
 `;
@@ -36,14 +38,14 @@ export class Launch extends Component {
           {({ loading, error, data }) => {
             if (loading) return <h4>Loading...</h4>;
             if (error) console.log(error);
-            const { name, flight_number, date_utc, success, rocket } =
+            const { name, flight_number, date_utc, success, rocket, details } =
               data.launch;
             return (
               <Query query={ROCKET_QUERY} variables={{ rocket }}>
                 {({ loading, error, data }) => {
                   if (loading) return <h4>Loading...</h4>;
                   if (error) console.log(error);
-                  const { description, name: rocketName } = data.rocket;
+                  const { description, name: rocketName, cost_per_launch } = data.rocket;
                   return (
                     <div>
                       <h1 className="display-4 my-3">
@@ -51,6 +53,9 @@ export class Launch extends Component {
                       </h1>
                       <h4 className="mb-3">Launch Details</h4>
                       <ul className="list-group">
+                        <li className="list-group-item">
+                          Mission Details: { details}
+                        </li>
                         <li className="list-group-item">
                           Flight Number: {flight_number}
                         </li>
@@ -81,6 +86,9 @@ export class Launch extends Component {
                         </li>
                         <li className="list-group-item">
                           <p>Rocket Description: {description}</p>
+                        </li>
+                        <li className="list-group-item">
+                          <p>Cost Per Launch: ${cost_per_launch}</p>
                         </li>
                       </ul>
                       <hr />

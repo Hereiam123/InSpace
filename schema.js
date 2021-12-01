@@ -17,7 +17,8 @@ const LaunchType = new GraphQLObjectType({
     name: { type: GraphQLString },
     date_utc: { type: GraphQLString },
     success: { type: GraphQLBoolean },
-    rocket: {type: GraphQLString}
+    rocket: {type: GraphQLString},
+    details: {type: GraphQLString}
   }),
 });
 
@@ -27,7 +28,8 @@ const RocketType = new GraphQLObjectType({
   fields: () => ({
     name: { type: GraphQLString },
     type: { type: GraphQLString },
-    description: {type: GraphQLString}
+    description: {type: GraphQLString},
+    cost_per_launch: {type: GraphQLInt}
   }),
 });
 
